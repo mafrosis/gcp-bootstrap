@@ -1,3 +1,3 @@
-data "google_organization" "org" {
-  domain = "${var.domain}"
+data google_organization org {
+  domain = var.domain
 }

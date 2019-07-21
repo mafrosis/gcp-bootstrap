@@ -1,21 +1,19 @@
 terraform {
-  required_version = "0.11.13"
+  required_version = ">= 0.12"
 
   backend "gcs" {
     prefix = "bootstrap"
   }
 }
 
-provider "google" {
-  region = "australia-southeast1"
-	version = "~> 2.4"
+provider google {
+  version = "~> 2.11.0"
 }
 
-provider "google-beta" {
-  region = "australia-southeast1"
-	version = "~> 2.4"
+provider google-beta {
+  version = "~> 2.11.0"
 }
 
-provider "random" {
-	version = "~> 2.1"
+provider random {
+  version = "~> 2.1"
 }
