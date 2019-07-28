@@ -1,10 +1,10 @@
 #! /bin/bash -e
 
-USAGE='bootstrap-org.sh ORG_ID BOOTSTRAP_PROJECT KEY_FILEPATH [BILLING_ACCOUNT_ID]
+USAGE='bootstrap-org.sh ORG_ID BOOTSTRAP_PROJECT [KEY_FILEPATH] [BILLING_ACCOUNT_ID]
 
   ORG_ID               GCP organisation id
   BOOTSTRAP_PROJECT   Terraform state project
-  KEY_FILEPATH         Local filepath in which to store service account key
+  KEY_FILEPATH         Local filepath in which to store service account key (default: terraform-root.json)
   BILLING_ACCOUNT_ID   Optionally link a billing account to the Terraform state project'
 
 if [[ $# -ne 3 && $# -ne 4 ]]; then
@@ -15,7 +15,7 @@ fi
 
 ORG_ID=$1
 BOOTSTRAP_PROJECT=$2
-KEY_FILEPATH="${3:-credentials.json}"
+KEY_FILEPATH="${3:-terraform-root.json}"
 BILLING_ACCOUNT_ID=$4
 
 # Display current gcloud user
@@ -56,14 +56,14 @@ if ! gcloud iam service-accounts list --project="${BOOTSTRAP_PROJECT}" | grep te
 	echo "Creating terraform service account"
 
 	# Create the account terraform will use
-	gcloud iam service-accounts create terraform \
+	gcloud iam service-accounts create terraform-root \
 		--project="${BOOTSTRAP_PROJECT}" \
 		--display-name "Terraform"
 
 	# Create the service key for the above account
 	gcloud iam service-accounts keys create "${KEY_FILEPATH}" \
 		--project="${BOOTSTRAP_PROJECT}" \
-		--iam-account "terraform@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com"
+		--iam-account "terraform-root@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com"
 else
 	echo "Terraform service account already exists"
 fi
@@ -81,14 +81,14 @@ if ! gsutil list -p "${BOOTSTRAP_PROJECT}" "gs://${BOOTSTRAP_PROJECT}"; then
 
 		# Grant 'Storage Object Admin' role to the service account
 		gsutil iam ch \
-			"serviceAccount:terraform@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com:objectAdmin" \
+			"serviceAccount:terraform-root@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com:objectAdmin" \
 			"gs://${BUCKET}"
 	done
 else
 	echo "Terraform cloud storage bucket already exists"
 fi
 
-# Grant the following permissions at organization level for the service account:
+# Grant the following permissions at organization level for the ROOT service account:
 # - Billing Account User
 # - Editor
 # - Service Account Admin
@@ -96,7 +96,7 @@ fi
 # - Organization Admin
 # - Storage Admin
 
-CURRENT_ROLES="$(gcloud organizations get-iam-policy "${ORG_ID}" --format json | jq --raw-output ".bindings[] | select( .members[] | contains(\"terraform@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com\") ) | .role")"
+CURRENT_ROLES="$(gcloud organizations get-iam-policy "${ORG_ID}" --format json | jq --raw-output ".bindings[] | select( .members[] | contains(\"terraform-root@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com\") ) | .role")"
 
 for ROLE in billing.user \
 	editor \
@@ -108,7 +108,7 @@ for ROLE in billing.user \
 
 	if [[ $CURRENT_ROLES != *"$ROLE"* ]]; then
 		gcloud organizations add-iam-policy-binding "${ORG_ID}" \
-			--member "serviceAccount:terraform@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com" \
+			--member "serviceAccount:terraform-root@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com" \
 			--role "roles/${ROLE}" \
 			&>/dev/null
 
@@ -120,8 +120,8 @@ done
 
 cat << EOF
 
-*******
-* Terraform project ${BOOTSTRAP_PROJECT} and service account is setup.
+******* Bootstrap Complete *******
+* Terraform project ${BOOTSTRAP_PROJECT} and root service account is setup.
 * Credentials have been written to ${KEY_FILEPATH}.
-*******
+**********************************
 EOF
