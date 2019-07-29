@@ -78,11 +78,6 @@ if ! gsutil list -p "${BOOTSTRAP_PROJECT}" "gs://${BOOTSTRAP_PROJECT}"; then
 			-l australia-southeast1 \
 			-p "${BOOTSTRAP_PROJECT}" \
 			"gs://${BUCKET}"
-
-		# Grant 'Storage Object Admin' role to the service account
-		gsutil iam ch \
-			"serviceAccount:terraform-root@${BOOTSTRAP_PROJECT}.iam.gserviceaccount.com:objectAdmin" \
-			"gs://${BUCKET}"
 	done
 else
 	echo "Terraform cloud storage bucket already exists"
