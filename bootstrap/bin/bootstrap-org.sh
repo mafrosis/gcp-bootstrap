@@ -118,6 +118,11 @@ for ROLE in billing.user \
 	fi
 done
 
+# delete the default VPC created in our Foundations project
+if gcloud --project "${BOOTSTRAP_PROJECT}" compute networks list | grep -v default; then
+	gcloud --project "${BOOTSTRAP_PROJECT}" compute networks delete default
+fi
+
 cat << EOF
 
 ******* Bootstrap Complete *******
