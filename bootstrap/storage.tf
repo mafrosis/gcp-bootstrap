@@ -16,14 +16,14 @@ resource google_kms_crypto_key terraform_state {
 
 # Allow Cloud Storage to use encrypt/decrypt keys on this project
 resource google_project_iam_member terraform_state_encrypt_decrypt {
-  project = data.google_project.bootstrap.project_id
+  project = google_project.bootstrap.project_id
   role    = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
-  member  = "serviceAccount:service-${data.google_project.bootstrap.number}@gs-project-accounts.iam.gserviceaccount.com"
+  member  = "serviceAccount:service-${google_project.bootstrap.number}@gs-project-accounts.iam.gserviceaccount.com"
 }
 
 resource google_storage_bucket terraform_state_logs {
-  name     = "${data.google_project.bootstrap.project_id}-logs"
-  project  = data.google_project.bootstrap.project_id
+  name     = "${google_project.bootstrap.project_id}-logs"
+  project  = google_project.bootstrap.project_id
   location = var.region
 
   versioning {
@@ -40,8 +40,8 @@ resource google_storage_bucket terraform_state_logs {
 }
 
 resource google_storage_bucket terraform_state {
-  name     = data.google_project.bootstrap.project_id
-  project  = data.google_project.bootstrap.project_id
+  name     = google_project.bootstrap.project_id
+  project  = google_project.bootstrap.project_id
   location = var.region
 
   versioning {
