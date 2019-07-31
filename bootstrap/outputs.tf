@@ -5,3 +5,7 @@ output tf_project_creator {
 output tf_project_creator_key {
   value = google_service_account_key.project_creator.private_key
 }
+
+output dns_managed_zone_name {
+  value = google_dns_managed_zone.root.name
+}
