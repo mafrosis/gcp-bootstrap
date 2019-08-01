@@ -1,24 +1,9 @@
-.PHONY: all clean test
-
-ORG_ID?=412577173587
-ORG?=gcp.mafro.dev
-BOOTSTRAP_PROJECT_ID?=bootstrap-$(ORG_ID)
+include ../common.mk
 
 .PHONY: help
 help:
-	@echo 'make init					Setup Terraform for first run'
-	@echo 'make bootstrap-resources		Import into Terraform bootstrap resources created by bin/boostrap.sh'
-
-.PHONY: init
-init: _remove-dot-terraform .terraform
-	@true
-
-.PHONY: _remove-dot-terraform
-_remove-dot-terraform:
-	@rm -rf .terraform
-
-.terraform:
-	terraform init -backend-config=bucket=$(BOOTSTRAP_PROJECT_ID)
+	@echo 'make init                   Setup Terraform for first run'
+	@echo 'make bootstrap-resources    Import into Terraform bootstrap resources created by bin/boostrap.sh'
 
 .PHONY: bootstrap-resources
 bootstrap-resources: .terraform
