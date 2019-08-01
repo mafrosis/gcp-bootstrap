@@ -1,3 +1,5 @@
+# create terraform resources to control the bootstrapped state backend bucket
+
 resource random_id key_suffix {
   byte_length = 2
 }
