@@ -38,6 +38,13 @@ locals {
     # .. create new buckets for sub-projects
     "roles/storage.admin",
   ]
+
+  # IAM roles to add to bootstrap project for project-creator service account
+  # Allow project-creator service account to..
+  bootstrap_project_iam_roles = [
+    # .. query resources in the bootstrap project
+    "roles/browser",
+  ]
 }
 
 # Allow project-creator service account to access Terraform storage bucket
@@ -62,4 +69,12 @@ resource google_folder_iam_member roles {
   count  = length(local.terraform_folder_iam_roles)
   role   = local.terraform_folder_iam_roles[count.index]
   member = local.project_creator_sa
+}
+
+# Apply IAM roles to the bootstrap project for the project-creator service account
+resource google_project_iam_member bootstrap_roles {
+  project = google_project.bootstrap.project_id
+  count   = length(local.bootstrap_project_iam_roles)
+  role    = local.bootstrap_project_iam_roles[count.index]
+  member  = local.project_creator_sa
 }
