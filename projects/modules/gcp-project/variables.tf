@@ -15,6 +15,11 @@ variable billing_account {
   type        = string
 }
 
+variable bootstrap_project_id {
+  description = "GCP Project used to bootstrap the organisation for automation"
+  type        = string
+}
+
 variable folder_id {
   description = "GCP folder ID hosting this project"
   type        = string
@@ -35,4 +40,10 @@ variable extra_project_iam_roles {
   description = "Extra IAM roles enabled on this project for the project's service account"
   type        = list(string)
   default     = []
+}
+
+variable dns_subdomain {
+  description = "Subdomain for the zone under which all DNS for this project can be created"
+  type        = string
+  default     = null
 }

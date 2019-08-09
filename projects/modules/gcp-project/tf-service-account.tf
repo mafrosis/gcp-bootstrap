@@ -8,6 +8,8 @@ locals {
 
   # Allow project's service account to ..
   project_iam_roles = [
+    # .. administer the project's DNS zone
+    "roles/dns.admin",
     # .. create additional service accounts and keys
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
@@ -22,8 +24,8 @@ locals {
 
 # Create service account for this project
 resource google_service_account project {
-  account_id   = "tf-${var.project_name}"
-  display_name = "Terraform Project ${title(var.project_name)} SA"
+  account_id   = format("tf-%s", var.project_name)
+  display_name = format("Terraform Project %s SA", title(var.project_name))
   project      = google_project.project.project_id
 }
 
