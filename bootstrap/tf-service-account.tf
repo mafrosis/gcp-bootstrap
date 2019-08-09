@@ -44,6 +44,8 @@ locals {
   bootstrap_project_iam_roles = [
     # .. query resources in the bootstrap project
     "roles/browser",
+    # .. change IAM on the bootstrap project (grant read access for project service accounts etc)
+    "roles/resourcemanager.projectIamAdmin",
   ]
 }
 
