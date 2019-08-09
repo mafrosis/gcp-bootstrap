@@ -30,3 +30,9 @@ variable project_apis {
   type        = list(string)
   default     = []
 }
+
+variable extra_project_iam_roles {
+  description = "Extra IAM roles enabled on this project for the project's service account"
+  type        = list(string)
+  default     = []
+}

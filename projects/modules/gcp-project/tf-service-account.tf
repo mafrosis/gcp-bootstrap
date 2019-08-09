@@ -13,8 +13,10 @@ locals {
     "roles/iam.serviceAccountKeyAdmin",
     # .. add iam roles
     "roles/resourcemanager.projectIamAdmin",
-    # .. have full access to cloud storage
+    # .. have full access to cloud storage for the project
     "roles/storage.admin",
+    # .. have full access to cloud KMS for the project
+    "roles/cloudkms.admin",
   ]
 }
 
@@ -42,5 +44,13 @@ resource google_project_iam_member roles {
   project = google_project.project.project_id
   count   = length(local.project_iam_roles)
   role    = local.project_iam_roles[count.index]
+  member  = local.project_sa
+}
+
+# Apply additional IAM roles to the project for project's service account
+resource google_project_iam_member extra_roles {
+  project = google_project.project.project_id
+  count   = length(var.extra_project_iam_roles)
+  role    = var.extra_project_iam_roles[count.index]
   member  = local.project_sa
 }
