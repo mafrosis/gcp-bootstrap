@@ -19,7 +19,7 @@ resource google_dns_managed_zone project {
   visibility  = "public"
 
   depends_on = [
-    google_project_service.base_apis
+    google_project_service.apis
   ]
 }
 

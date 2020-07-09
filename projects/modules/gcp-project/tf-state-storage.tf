@@ -17,7 +17,7 @@ resource google_kms_key_ring terraform_state {
   location = var.region
 
   depends_on = [
-    google_project_service.base_apis
+    google_project_service.apis
   ]
 }
 
@@ -34,7 +34,7 @@ resource google_kms_crypto_key_iam_member terraform_state_encrypt_decrypt {
   member        = local.cloud_storage_sa
 
   depends_on = [
-    google_project_service.base_apis
+    google_project_service.apis
   ]
 }
 

@@ -20,6 +20,8 @@ locals {
     # .. have full access to cloud KMS for the project
     "roles/cloudkms.admin",
   ]
+
+  all_iam_roles = distinct(concat(local.project_iam_roles, var.extra_project_iam_roles))
 }
 
 # Create service account for this project
@@ -44,15 +46,7 @@ resource google_storage_bucket_iam_member bucket_storage_objectAdmin {
 # Apply IAM roles to the project for project's service account
 resource google_project_iam_member roles {
   project = google_project.project.project_id
-  count   = length(local.project_iam_roles)
-  role    = local.project_iam_roles[count.index]
-  member  = local.project_sa
-}
-
-# Apply additional IAM roles to the project for project's service account
-resource google_project_iam_member extra_roles {
-  project = google_project.project.project_id
-  count   = length(var.extra_project_iam_roles)
-  role    = var.extra_project_iam_roles[count.index]
+  count   = length(local.all_iam_roles)
+  role    = local.all_iam_roles[count.index]
   member  = local.project_sa
 }

@@ -1,7 +1,7 @@
 # create new project
 #
 locals {
-  # APIs to turn on in ALL projects
+  # APIs to turn on in workload projects
   # Can be extended via var.project_apis
   base_apis = [
     "cloudbilling.googleapis.com",
@@ -14,6 +14,9 @@ locals {
     "storage-api.googleapis.com",
     "storage-component.googleapis.com",
   ]
+
+  # IAM roles to add to bootstrap project for new project's service account
+  all_apis = distinct(concat(local.base_apis, var.project_apis))
 
   # On the bootstrap project, allow workload project's service account to  ..
   bootstrap_project_iam_roles = [
@@ -36,19 +39,10 @@ resource google_project project {
 }
 
 # Activate required service APIs on the project
-resource google_project_service base_apis {
-  count   = length(local.base_apis)
+resource google_project_service apis {
+  count   = length(local.all_apis)
   project = google_project.project.project_id
-  service = local.base_apis[count.index]
-
-  disable_on_destroy = false
-}
-
-# Activate additional service APIs on the project
-resource google_project_service extra_apis {
-  count   = length(var.project_apis)
-  project = google_project.project.project_id
-  service = var.project_apis[count.index]
+  service = local.all_apis[count.index]
 
   disable_on_destroy = false
 }
