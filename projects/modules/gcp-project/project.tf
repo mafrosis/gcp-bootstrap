@@ -11,6 +11,7 @@ locals {
     "dns.googleapis.com",
     "iam.googleapis.com",
     "networkmanagement.googleapis.com",
+    "secretmanager.googleapis.com",
     "serviceusage.googleapis.com",
     "storage-api.googleapis.com",
     "storage-component.googleapis.com",

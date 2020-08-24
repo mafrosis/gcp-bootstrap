@@ -21,6 +21,8 @@ locals {
     "roles/storage.admin",
     # .. have full access to administer KMS keyrings/keys for the project
     "roles/cloudkms.admin",
+    # .. ability to access encrypted secrets
+    "roles/secretmanager.secretAccessor",
   ]
 
   all_iam_roles = distinct(concat(local.project_iam_roles, var.extra_project_iam_roles))
