@@ -22,3 +22,19 @@ resource google_compute_subnetwork subnet {
 
   private_ip_google_access = true
 }
+
+# Enable GCE VM healthchecks as standard across all projects
+resource google_compute_firewall gce_healthcheck {
+  count = local.create_vpc
+
+  project = google_project.project.project_id
+  network = google_compute_network.network[0].self_link
+  name    = "allow-gce-healthcheck"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "443"]
+  }
+
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+}
