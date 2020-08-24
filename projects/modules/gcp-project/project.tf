@@ -10,6 +10,7 @@ locals {
     "compute.googleapis.com",
     "dns.googleapis.com",
     "iam.googleapis.com",
+    "networkmanagement.googleapis.com",
     "serviceusage.googleapis.com",
     "storage-api.googleapis.com",
     "storage-component.googleapis.com",

@@ -47,3 +47,18 @@ variable dns_subdomain {
   type        = string
   default     = null
 }
+
+variable create_vpc {
+  description = "Flag indicating whether to delete the default VPC from the new project (default: false)"
+  type        = bool
+  default     = false
+}
+
+variable subnet_ip_ranges {
+  description = "Specify the subnet ranges for the VPC"
+  type = list(object({
+    subnet = string
+    region = string
+  }))
+  default = []
+}

@@ -2,6 +2,10 @@ output project_id {
   value = google_project.project.project_id
 }
 
+output network {
+  value = join("", google_compute_network.network.*.self_link)
+}
+
 output service_account {
   value = google_service_account.project.email
 }
