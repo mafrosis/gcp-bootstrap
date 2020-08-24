@@ -16,3 +16,7 @@ _remove-dot-terraform:
 
 .terraform:
 	terraform init -backend-config=bucket=$(BOOTSTRAP_PROJECT_ID) -reconfigure
+
+.PHONY: get-service-account-key
+get-service-account-key:
+	@echo "$$(terraform output service_account_key)" | base64 --decode
