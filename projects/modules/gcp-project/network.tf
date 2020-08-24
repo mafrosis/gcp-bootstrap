@@ -38,3 +38,19 @@ resource google_compute_firewall gce_healthcheck {
 
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
 }
+
+# Enable port 22 access from IAP range as standard across all projects
+resource google_compute_firewall iap_ssh {
+  count = local.create_vpc
+
+  project = google_project.project.project_id
+  network = google_compute_network.network[0].self_link
+  name    = "allow-ssh-ingress-from-iap"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["35.235.240.0/20"]
+}
