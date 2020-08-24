@@ -13,11 +13,13 @@ locals {
     # .. create additional service accounts and keys
     "roles/iam.serviceAccountAdmin",
     "roles/iam.serviceAccountKeyAdmin",
+    # .. start GCP services as other service accounts in this project
+    "roles/iam.serviceAccountUser",
     # .. add iam roles
     "roles/resourcemanager.projectIamAdmin",
     # .. have full access to cloud storage for the project
     "roles/storage.admin",
-    # .. have full access to cloud KMS for the project
+    # .. have full access to administer KMS keyrings/keys for the project
     "roles/cloudkms.admin",
   ]
 
