@@ -28,7 +28,7 @@ locals {
 
   # IAM roles to add to "Terraform Managed" for project-creator service account
   # Allow project-creator service account to..
-  terraform_folder_iam_roles = [
+  managed_projects_folder_iam_roles = [
     # .. create new projects
     "roles/resourcemanager.projectCreator",
     # .. delete new projects
@@ -69,9 +69,9 @@ resource google_organization_iam_member roles {
 
 # Apply IAM roles to the Terraform folder for the project-creator service account
 resource google_folder_iam_member roles {
-  folder = google_folder.terraform_managed.name
-  count  = length(local.terraform_folder_iam_roles)
-  role   = local.terraform_folder_iam_roles[count.index]
+  folder = google_folder.managed_projects_folder.name
+  count  = length(local.managed_projects_folder_iam_roles)
+  role   = local.managed_projects_folder_iam_roles[count.index]
   member = local.project_creator_sa
 }
 

@@ -4,12 +4,6 @@ variable region {
   default     = "australia-southeast1"
 }
 
-variable domain {
-  description = "Domain name attached to GCP organisation"
-  type        = string
-  default     = "gcp.mafro.dev"
-}
-
 variable billing_account {
   description = "GCP billing account ID used for this organisation"
   type        = string

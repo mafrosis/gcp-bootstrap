@@ -3,7 +3,8 @@ output tf_project_creator {
 }
 
 output tf_project_creator_key {
-  value = google_service_account_key.project_creator.private_key
+  value     = google_service_account_key.project_creator.private_key
+  sensitive = true
 }
 
 output dns_managed_zone_name {

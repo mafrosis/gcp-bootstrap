@@ -23,24 +23,6 @@ resource google_project_iam_member terraform_state_encrypt_decrypt {
   member  = "serviceAccount:service-${google_project.bootstrap.number}@gs-project-accounts.iam.gserviceaccount.com"
 }
 
-resource google_storage_bucket terraform_state_logs {
-  name     = "${google_project.bootstrap.project_id}-logs"
-  project  = google_project.bootstrap.project_id
-  location = var.region
-
-  versioning {
-    enabled = false
-  }
-
-  encryption {
-    default_kms_key_name = google_kms_crypto_key.terraform_state.self_link
-  }
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
 resource google_storage_bucket terraform_state {
   name     = google_project.bootstrap.project_id
   project  = google_project.bootstrap.project_id
@@ -50,10 +32,6 @@ resource google_storage_bucket terraform_state {
     enabled = true
   }
 
-  logging {
-    log_bucket = google_storage_bucket.terraform_state_logs.name
-  }
-
   encryption {
     default_kms_key_name = google_kms_crypto_key.terraform_state.self_link
   }
@@ -61,4 +39,8 @@ resource google_storage_bucket terraform_state {
   lifecycle {
     prevent_destroy = true
   }
+
+  depends_on = [
+    google_project_iam_member.terraform_state_encrypt_decrypt
+  ]
 }

@@ -1,10 +1,10 @@
 # create folder hierarchy for all projects in the organisation
 
-resource google_folder terraform_managed {
-  display_name = "Terraform Managed"
+resource google_folder managed_projects_folder {
+  display_name = "Projects"
   parent       = data.google_organization.org.name
 }
 
-output terraform_managed_folder_id {
-  value = google_folder.terraform_managed.id
+output managed_projects_folder_id {
+  value = google_folder.managed_projects_folder.id
 }
