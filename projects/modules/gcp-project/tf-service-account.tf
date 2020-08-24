@@ -21,6 +21,8 @@ locals {
     "roles/storage.admin",
     # .. have full access to administer KMS keyrings/keys for the project
     "roles/cloudkms.admin",
+    # .. ability to read public keys and sign using keys
+    "roles/cloudkms.signerVerifier",
     # .. ability to access encrypted secrets
     "roles/secretmanager.secretAccessor",
   ]
